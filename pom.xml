@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>moogata-lab-dialog</artifactId>
-    <name>moogata-lab-dialog</name>
+    <name>moogata</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
