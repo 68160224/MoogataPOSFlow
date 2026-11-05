@@ -289,9 +289,9 @@ public class PosFrame extends javax.swing.JFrame {
                 return;
             }
             // เปิดหน้าสั่งอาหารของบิลเดิม (สั่งเพิ่มได้เรื่อย ๆ จนกว่าจะเช็คบิล)
-            //OrderFrame orderFrame = new OrderFrame(this, employee, table, bill);
-            //orderFrame.setLocationRelativeTo(this);
-            //orderFrame.setVisible(true);
+            OrderFrame orderFrame = new OrderFrame(this, employee, table, bill);
+            orderFrame.setLocationRelativeTo(this);
+            orderFrame.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this,
                     "โต๊ะ " + table.getNumber() + " รอชำระเงินอยู่",

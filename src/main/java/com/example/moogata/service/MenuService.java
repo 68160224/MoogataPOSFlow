@@ -7,6 +7,7 @@ package com.example.moogata.service;
 import com.example.moogata.model.*;
 import com.example.moogata.dao.*;
 import java.util.*;
+
 /**
  *
  * @author Windows
@@ -14,4 +15,14 @@ import java.util.*;
 public class MenuService {
 
     private final MenuItemDao menuItemDao = new MenuItemDao();
+
+    public List<MenuItem> getAvailable() {
+        List<MenuItem> available = new ArrayList<>();
+        for (MenuItem item : menuItemDao.getAll()) {
+            if ("มี".equals(item.getStatus())) {
+                available.add(item);
+            }
+        }
+        return available;
+    }
 }
