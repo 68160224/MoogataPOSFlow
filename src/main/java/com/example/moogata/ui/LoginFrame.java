@@ -24,6 +24,7 @@ public class LoginFrame extends javax.swing.JFrame {
      * Creates new form LoginFrame
      */
     public LoginFrame() {
+        ThaiFont.apply();
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -135,12 +136,16 @@ public class LoginFrame extends javax.swing.JFrame {
             return;
         }
 
-        if (employee.getRole() != 1) {
-            JOptionPane.showMessageDialog(this,
-                    employee.getName() + " ไม่ใช่ผู้จัดการ จึงเข้าหน้าจัดการพนักงานไม่ได้",
-                    "ไม่มีสิทธิ์เข้าใช้", JOptionPane.WARNING_MESSAGE);
-            return;
+        if (employee.getRole() == 1) {
+            EmployeeFrame employeeFrame = new EmployeeFrame(employee);
+            employeeFrame.setLocationRelativeTo(this);
+            employeeFrame.setVisible(true);
+        } else {
+            PosFrame posFrame = new PosFrame(employee);   // ← หน้าจอที่กำลังจะสร้าง (ขั้น 6.3)
+            posFrame.setLocationRelativeTo(this);
+            posFrame.setVisible(true);
         }
+        this.dispose(); // ปิดหน้าล็อกอิน — ไม่ปิดโปรแกรม (ไม่ใช่ System.exit)
 
         EmployeeFrame employeeFrame = new EmployeeFrame(employee);
         employeeFrame.setLocationRelativeTo(this);

@@ -17,6 +17,14 @@ public class TableService {
     private final DiningTableDao tableDao = new DiningTableDao();
     private final BillDao billDao = new BillDao();
 
+    public DiningTable getTable(int id) {
+        return tableDao.get(id);
+    }
+
+    public List<DiningTable> getAllTables() {
+        return tableDao.getAll();
+    }
+
     public Bill openTable(DiningTable table, int headcount, Employee employee) {
         // กฎ 1: ต้องรู้จำนวนลูกค้าก่อนเปิดโต๊ะเสมอ
         if (table == null || employee == null || headcount < 1) {

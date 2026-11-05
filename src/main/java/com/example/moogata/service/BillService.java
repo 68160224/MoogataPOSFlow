@@ -18,6 +18,14 @@ public class BillService {
     private final BillItemDao billItemDao = new BillItemDao();
     private final TableService tableService = new TableService();
 
+    public Bill getOpenBillForTable(int tableId) {
+        return billDao.getOpenByTableId(tableId);
+    }
+
+    public List<BillItem> getBillItems(int billId) {
+        return billItemDao.findByBillId(billId);
+    }
+
     /**
      * สั่งอาหาร 1 รอบ — snapshot แล้วบันทึกทันที / กฎ: บิลปิดแล้วสั่งไม่ได้
      */

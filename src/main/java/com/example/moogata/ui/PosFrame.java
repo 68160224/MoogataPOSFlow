@@ -4,19 +4,40 @@
  */
 package com.example.moogata.ui;
 
+import com.example.moogata.model.Bill;
+import com.example.moogata.model.DiningTable;
+import com.example.moogata.model.Employee;
+import com.example.moogata.service.BillService;
+import com.example.moogata.service.TableService;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Windows
  */
 public class PosFrame extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PosFrame.class.getName());
 
-    /**
-     * Creates new form PosFrame
-     */
-    public PosFrame() {
+    private static final java.awt.Color COLOR_VACANT = new java.awt.Color(0xCDE5AD);
+    private static final java.awt.Color COLOR_IN_USE = new java.awt.Color(0xF2C5D5);
+    private static final java.awt.Color COLOR_AWAITING = new java.awt.Color(0xF6E991);
+
+    private final Employee employee;                 // ใครล็อกอินอยู่ (เปิดบิลแทนใคร)
+    private final TableService tableService = new TableService();
+    private final BillService billService = new BillService();
+
+// ข้อมูลโต๊ะที่อ่านล่าสุดจากฐานข้อมูล — เรียงตามลำดับเดียวกับ btnTable1–6
+    private List<DiningTable> tables = new ArrayList<>();
+
+    public PosFrame(Employee employee) {
+        this.employee = employee;
+        ThaiFont.apply(); // บังคับฟอนต์ไทยทั้งโปรแกรม — กันข้อความไทยเป็นกล่องเปล่าบนบาง JDK
         initComponents();
+        refreshTables();
+        setLocationRelativeTo(null); // เปิดกลางหน้าจอ
     }
 
     /**
@@ -28,21 +49,141 @@ public class PosFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblHeader = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
+        btnTable1 = new javax.swing.JButton();
+        btnTable2 = new javax.swing.JButton();
+        btnTable3 = new javax.swing.JButton();
+        btnTable4 = new javax.swing.JButton();
+        btnTable5 = new javax.swing.JButton();
+        btnTable6 = new javax.swing.JButton();
+        lblSummary = new javax.swing.JLabel();
+        btnRefresh = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ผังโต๊ะ — BONUS SUKI POS");
+
+        lblHeader.setFont(new java.awt.Font("Leelawadee UI", 1, 20)); // NOI18N
+        lblHeader.setText("ผังโต๊ะร้านหมูกระทะ");
+
+        lblUser.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        lblUser.setText("พนักงาน: somchai (แคชเชียร์)");
+
+        btnTable1.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable1.addActionListener(this::btnTable1ActionPerformed);
+
+        btnTable2.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable2.addActionListener(this::btnTable2ActionPerformed);
+
+        btnTable3.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable3.addActionListener(this::btnTable3ActionPerformed);
+
+        btnTable4.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable4.addActionListener(this::btnTable4ActionPerformed);
+
+        btnTable5.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable5.addActionListener(this::btnTable5ActionPerformed);
+
+        btnTable6.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnTable6.addActionListener(this::btnTable6ActionPerformed);
+
+        lblSummary.setFont(new java.awt.Font("Leelawadee UI", 1, 16)); // NOI18N
+        lblSummary.setText("jLabel1");
+
+        btnRefresh.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnRefresh.setText("รีเฟรช");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnTable4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnTable5, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(35, 35, 35)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnTable3, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnTable6, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(lblHeader)
+                .addGap(18, 18, 18)
+                .addComponent(lblUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnTable4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnTable5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnTable3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnTable6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSummary)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnTable1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable1ActionPerformed
+        tableClicked(0);
+    }//GEN-LAST:event_btnTable1ActionPerformed
+
+    private void btnTable2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable2ActionPerformed
+        tableClicked(1);
+    }//GEN-LAST:event_btnTable2ActionPerformed
+
+    private void btnTable3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable3ActionPerformed
+        tableClicked(2);
+    }//GEN-LAST:event_btnTable3ActionPerformed
+
+    private void btnTable4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable4ActionPerformed
+        tableClicked(3);
+    }//GEN-LAST:event_btnTable4ActionPerformed
+
+    private void btnTable5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable5ActionPerformed
+        tableClicked(4);
+    }//GEN-LAST:event_btnTable5ActionPerformed
+
+    private void btnTable6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTable6ActionPerformed
+        tableClicked(5);
+    }//GEN-LAST:event_btnTable6ActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        refreshTables();
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -66,9 +207,95 @@ public class PosFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new PosFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new PosFrame(null).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnTable1;
+    private javax.swing.JButton btnTable2;
+    private javax.swing.JButton btnTable3;
+    private javax.swing.JButton btnTable4;
+    private javax.swing.JButton btnTable5;
+    private javax.swing.JButton btnTable6;
+    private javax.swing.JLabel lblHeader;
+    private javax.swing.JLabel lblSummary;
+    private javax.swing.JLabel lblUser;
     // End of variables declaration//GEN-END:variables
+
+    public void refreshTables() {
+        // ปุ่มที่วางไว้ 6 ปุ่ม จับคู่เป็นอาเรย์ตามลำดับโต๊ะ เพื่อวนจับคู่กับข้อมูลจากฐานข้อมูล
+        javax.swing.JButton[] tableButtons = {
+            btnTable1, btnTable2, btnTable3, btnTable4, btnTable5, btnTable6
+        };
+        tables = tableService.getAllTables();
+        int vacant = 0;
+        int inUse = 0;
+        for (int i = 0; i < tables.size() && i < tableButtons.length; i++) {
+            DiningTable table = tables.get(i);
+            javax.swing.JButton btn = tableButtons[i];
+            String detail;
+            java.awt.Color color;
+            if (DiningTable.STATUS_IN_USE.equals(table.getStatus())) {
+                detail = "ใช้งาน (" + table.getHeadcount() + " คน)";
+                color = COLOR_IN_USE;
+                inUse++;
+            } else if (DiningTable.STATUS_AWAITING.equals(table.getStatus())) {
+                detail = "รอชำระ";
+                color = COLOR_AWAITING;
+            } else {
+                detail = "ว่าง";
+                color = COLOR_VACANT;
+                vacant++;
+            }
+            btn.setText("<html><center><b>โต๊ะ " + table.getNumber() + "</b><br>" + detail + "</center></html>");
+            btn.setBackground(color);
+            btn.setOpaque(true);
+            btn.setBorderPainted(false);
+        }
+        lblSummary.setText("ว่าง " + vacant + " โต๊ะ · ใช้งาน " + inUse + " โต๊ะ");
+    }
+
+    private void tableClicked(int index) {
+        DiningTable table = tables.get(index);
+        if (table.isVacant()) {
+            // เปิดโต๊ะ: ถามจำนวนลูกค้าก่อน (กฎ: ต้องใส่จำนวนคน จึงเปิดโต๊ะได้)
+            String input = JOptionPane.showInputDialog(this,
+                    "จำนวนลูกค้า (โต๊ะ " + table.getNumber() + "):",
+                    "เปิดโต๊ะ", JOptionPane.QUESTION_MESSAGE);
+            if (input == null) {
+                return; // กดยกเลิก
+            }
+            int headcount;
+            try {
+                headcount = Integer.parseInt(input.trim());
+            } catch (NumberFormatException ex) {
+                headcount = 0;
+            }
+            Bill bill = tableService.openTable(table, headcount, employee);
+            if (bill == null) {
+                JOptionPane.showMessageDialog(this,
+                        "เปิดโต๊ะไม่สำเร็จ — ต้องระบุจำนวนลูกค้าอย่างน้อย 1 คน\nหรือโต๊ะนี้มีลูกค้านั่งอยู่แล้ว",
+                        "เปิดโต๊ะไม่สำเร็จ", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            refreshTables();
+        } else if (DiningTable.STATUS_IN_USE.equals(table.getStatus())) {
+            Bill bill = billService.getOpenBillForTable(table.getId());
+            if (bill == null) {
+                JOptionPane.showMessageDialog(this,
+                        "โต๊ะนี้ใช้งานอยู่แต่ไม่พบบิล — ตรวจฐานข้อมูล",
+                        "ข้อมูลไม่สมดุล", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // เปิดหน้าสั่งอาหารของบิลเดิม (สั่งเพิ่มได้เรื่อย ๆ จนกว่าจะเช็คบิล)
+            //OrderFrame orderFrame = new OrderFrame(this, employee, table, bill);
+            //orderFrame.setLocationRelativeTo(this);
+            //orderFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "โต๊ะ " + table.getNumber() + " รอชำระเงินอยู่",
+                    "รอชำระ", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 }
