@@ -187,6 +187,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="&#xe40;&#xe0a;&#xe47;&#xe04;&#xe1a;&#xe34;&#xe25;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCheckoutActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnBack">
       <Properties>

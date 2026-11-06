@@ -134,6 +134,7 @@ public class OrderFrame extends javax.swing.JFrame {
 
         btnCheckout.setFont(new java.awt.Font("Leelawadee UI", 1, 16)); // NOI18N
         btnCheckout.setText("เช็คบิล");
+        btnCheckout.addActionListener(this::btnCheckoutActionPerformed);
 
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("กลับหน้าโต๊ะ");
@@ -229,6 +230,24 @@ public class OrderFrame extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         dispose();
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        if (billService.getBillItems(bill.getId()).isEmpty()) {
+            JOptionPane.showMessageDialog(this, "ยังไม่มีรายการอาหาร — เช็คบิลไม่ได้",
+                    "บิลว่าง", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+// เปิดหน้าต่างเช็คบิล (modal) — ปิดบิลสำเร็จ isSaved() จะเป็น true
+        CheckoutDialog dialog = new CheckoutDialog(this, bill, table.getNumber());
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);   // บรรทัดนี้บล็อกจนกว่า dialog จะปิด (modal)
+        if (dialog.isSaved()) {
+            if (owner != null) {
+                owner.refreshTables(); // สีโต๊ะบนผังต้องกลับเป็นเขียว
+            }
+            dispose();
+        }
+    }//GEN-LAST:event_btnCheckoutActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
